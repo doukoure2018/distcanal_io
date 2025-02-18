@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class UserProvider with ChangeNotifier {
-  final String hostName = '10.0.2.2:8080';
-  //final String hostName = '197.149.231.141:8090';
+  final String hostName =
+      'http://distcanal-api-env.eba-msskhy3h.af-south-1.elasticbeanstalk.com';
   User? user;
   late AuthProvider authProvider;
 
