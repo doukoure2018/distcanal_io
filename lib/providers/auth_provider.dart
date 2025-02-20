@@ -79,6 +79,7 @@ class AuthProvider with ChangeNotifier {
       if (response.statusCode == 200) {
         final User user = User.fromJson(body['data']['user']);
 
+        // ignore: avoid_print
         print(user.firstName);
 
         token = body['data']['access_token'];

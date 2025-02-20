@@ -19,6 +19,7 @@ class AppStrings {
   static const String forgetPassword = "forgot_password_text";
   static const String registerText = "register_text";
   static const String loading = "loading";
+  // ignore: constant_identifier_names
   static const String retry_again = "retry_again";
   static const String ok = "ok";
   static const String emailHint = 'email_hint';

@@ -56,6 +56,7 @@ class _SigninViewState extends State<SigninView> {
       }
     } catch (e) {
       setState(() => _isLoading = false);
+      // ignore: avoid_print
       print("error");
     }
   }
