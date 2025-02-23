@@ -1,14 +1,5 @@
-import 'dart:convert';
-
-import 'package:distcanal_io/models/signin_model.dart';
-import 'package:distcanal_io/models/user_model.dart';
-import 'package:distcanal_io/presentation/resources/assets_manager.dart';
-import 'package:distcanal_io/presentation/views/homepages/home_view.dart';
 import 'package:distcanal_io/presentation/views/profilpage/profil_view.dart';
-import 'package:distcanal_io/providers/auth_provider.dart';
-import 'package:distcanal_io/providers/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class SigninView extends StatefulWidget {
   static const String routeName = '/signin';
@@ -16,201 +7,293 @@ class SigninView extends StatefulWidget {
   const SigninView({super.key});
 
   @override
-  State<SigninView> createState() => _SigninViewState();
+  // ignore: library_private_types_in_public_api
+  _SigninViewState createState() => _SigninViewState();
 }
 
 class _SigninViewState extends State<SigninView> {
-  final GlobalKey<FormState> key = GlobalKey<FormState>();
-  late SigninForm signinForm;
-  FormState? get form => key.currentState;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
   bool _isLoading = false;
-  bool hidePassword = true;
-  String? error;
+  String? _errorMessage;
 
-  @override
-  void initState() {
-    /// initialisation de la classe
+  // Méthode pour valider et soumettre le formulaire
+  Future<void> _submitForm() async {
+    if (_isLoading) return; // Empêcher une soumission multiple
 
-    signinForm = SigninForm(
-      email: '',
-      password: '',
-    );
-    super.initState();
-  }
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null; // Réinitialiser le message d'erreur
+    });
 
-  Future<void> submitForm() async {
-    try {
-      if (form!.validate()) {
-        form?.save();
-        final response = await Provider.of<AuthProvider>(context, listen: false)
-            .signin(signinForm);
-        if (response is User && mounted) {
-          Provider.of<UserProvider>(context, listen: false)
-              .updateUser(response);
-          Navigator.pushNamed(context, ProfilView.routeName);
-        } else {
-          setState(() {
-            error = json.decode(response.body)['reason'];
-          });
-        }
+    if (_formKey.currentState!.validate()) {
+      // Simuler une validation des identifiants (sans délai artificiel)
+      if (_emailController.text.trim() == 'moumine.ingenieur@gmail.com' &&
+          _passwordController.text.trim() == 'Moumine80') {
+        // Identifiants valides : rediriger vers ProfilView
+        Navigator.pushNamed(context, ProfilView.routeName);
+      } else {
+        // Identifiants invalides : afficher un message d'erreur
+        setState(() {
+          _errorMessage = "Identifiants incorrects.";
+        });
       }
-    } catch (e) {
-      setState(() => _isLoading = false);
-      // ignore: avoid_print
-      print("error");
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Connexion',
-          style: TextStyle(
-              //color: Colors.white,
-              ),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pushNamed(context, HomeView.routeName);
-          },
-          icon: const Icon(
-            Icons.chevron_left,
-            color: Colors.white,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [kPrimaryColor, Colors.black],
           ),
         ),
-      ),
-      body: Container(
-        //color: Colors.black,
-        alignment: Alignment.center,
-        padding:
-            const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Image(
-                image: AssetImage(ImageAssets.splashLogo),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Form(
-                key: key,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text(
-                      "Email addresse",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+        child: Stack(
+          children: [
+            Positioned(
+              left: 34,
+              top: 62,
+              child: Container(
+                height: 792,
+                padding: const EdgeInsets.only(top: 29, bottom: 56),
+                child: Form(
+                  key: _formKey, // Ajoutez le Form ici
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Logo
+                      Container(
+                        width: 326,
+                        height: 135,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                                AssetImage('assets/images/Logo_guidipress.png'),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3),
-                    ),
-                    TextFormField(
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == '' || value!.isEmpty) {
-                          return "Vous devez saisir Votre adresse email";
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        fillColor: Colors.black54,
-                        filled: true,
-                      ),
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                      onSaved: ((newValue) {
-                        signinForm.email = newValue!;
-                      }),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                    ),
-                    const Text(
-                      "Mot de passe",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 3),
-                    ),
-                    TextFormField(
-                      obscureText: hidePassword == true ? true : false,
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (value == '' || value!.isEmpty) {
-                          return "Vous devez saisir votre Mot de passe";
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                          fillColor: Colors.black54,
-                          filled: true,
-                          suffixIcon: IconButton(
-                            icon: hidePassword == true
-                                ? const Icon(
-                                    Icons.visibility,
-                                    color: Colors.white,
-                                  )
-                                : const Icon(
-                                    Icons.visibility_off,
-                                    color: Colors.white,
+                      const SizedBox(height: 12),
+
+                      // Bloc de connexion
+                      SizedBox(
+                        width: 346,
+                        height: 560,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // Arrière-plan flou
+                            Opacity(
+                              opacity: 0.05,
+                              child: Container(
+                                width: 326,
+                                height: 540,
+                                decoration: ShapeDecoration(
+                                  gradient: const LinearGradient(
+                                    begin: Alignment(-0.53, -0.85),
+                                    end: Alignment(0.53, 0.85),
+                                    colors: [Colors.white, Colors.black],
                                   ),
-                            onPressed: () {
-                              setState(() {
-                                hidePassword = !hidePassword;
-                              });
-                            },
-                          )),
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                      onSaved: ((newValue) {
-                        signinForm.password = newValue!;
-                      }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: error != null
-                          ? Text(
-                              error!,
-                              style: const TextStyle(color: Colors.red),
-                            )
-                          : null,
-                    ),
-                    ElevatedButton(
-                      onPressed: _isLoading ? null : submitForm,
-                      child: _isLoading
-                          ? const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            )
-                          : const Text(
-                              "Se connecter",
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(21),
+                                  ),
+                                ),
+                              ),
                             ),
-                    )
-                  ],
+
+                            // Titre "Se Connecter"
+                            const Positioned(
+                              top: 40,
+                              child: Text(
+                                'Se Connecter',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontFamily: 'Lexend',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+
+                            // Champ de saisie de l'email
+                            Positioned(
+                              top: 100,
+                              child: Container(
+                                width: 325,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 6, horizontal: 15),
+                                child: TextFormField(
+                                  controller: _emailController,
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.emailAddress,
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: const InputDecoration(
+                                    hintText: 'Saisir l\'email',
+                                    hintStyle: TextStyle(color: Colors.white70),
+                                    border: InputBorder.none,
+                                    prefixIcon: Icon(
+                                      Icons.email, // Icône pour l'email
+                                      color: kAccentColor,
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: kAccentColor, width: 2),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Veuillez saisir votre email.';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ),
+
+                            // Champ de saisie du mot de passe
+                            Positioned(
+                              top: 180,
+                              child: Container(
+                                width: 325,
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 6, horizontal: 15),
+                                child: TextFormField(
+                                  controller: _passwordController,
+                                  obscureText: !_isPasswordVisible,
+                                  textInputAction: TextInputAction.done,
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    hintText: 'Saisir le mot de passe',
+                                    hintStyle:
+                                        const TextStyle(color: Colors.white70),
+                                    border: InputBorder.none,
+                                    prefixIcon: const Icon(
+                                      Icons.lock, // Icône pour le mot de passe
+                                      color: kAccentColor,
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _isPasswordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                        color: kAccentColor,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isPasswordVisible =
+                                              !_isPasswordVisible;
+                                        });
+                                      },
+                                    ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: kAccentColor, width: 2),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Veuillez saisir votre mot de passe.';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ),
+
+                            // Bouton "Se Connecter"
+                            Positioned(
+                              top: 270,
+                              child: Container(
+                                width: 300,
+                                height: 44,
+                                decoration: ShapeDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [kPrimaryColor, kAccentColor],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: InkWell(
+                                  onTap: _isLoading ? null : _submitForm,
+                                  child: Center(
+                                    child: _isLoading
+                                        ? const CircularProgressIndicator(
+                                            color: Colors.white)
+                                        : const Text(
+                                            'Soumettre',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontFamily: 'Lexend',
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            // Lien "Mot de passe oublié ?"
+                            Positioned(
+                              bottom: 30,
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Ajouter une action si nécessaire
+                                },
+                                child: const Text(
+                                  'Mot de passe oublié ?',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            // Message d'erreur en dessous du bouton "Soumettre"
+                            if (_errorMessage != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 150),
+                                child: Text(
+                                  _errorMessage!,
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
+// Couleurs constantes
+const Color kPrimaryColor = Color(0xFF1E1E2C);
+const Color kAccentColor = Color(0xFFFF3D00);

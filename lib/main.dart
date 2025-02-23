@@ -4,6 +4,7 @@ import 'package:distcanal_io/presentation/views/homepages/home_view.dart';
 import 'package:distcanal_io/presentation/views/loginpage/signin_view.dart';
 import 'package:distcanal_io/presentation/views/notFound/not_found_view.dart';
 import 'package:distcanal_io/presentation/views/profilpage/profil_view.dart';
+import 'package:distcanal_io/presentation/views/profilpage/stats_view.dart'; // Ajoutez cette ligne
 import 'package:distcanal_io/presentation/views/splash/splash_view.dart';
 import 'package:distcanal_io/providers/auth_provider.dart';
 import 'package:distcanal_io/providers/user_provider.dart';
@@ -57,6 +58,9 @@ class _MyAuthState extends State<MyAuth> {
             return MaterialPageRoute(builder: (_) => const ProfilView());
           } else if (settings.name == SigninView.routeName) {
             return MaterialPageRoute(builder: (_) => const SigninView());
+          } else if (settings.name == StatsView.routeName) {
+            // Ajoutez cette condition
+            return MaterialPageRoute(builder: (_) => const StatsView());
           } else {
             return null;
           }

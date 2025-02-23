@@ -121,4 +121,6 @@ class AuthProvider with ChangeNotifier {
       _timer = null;
     }
   }
+
+  void logout() {}
 }
