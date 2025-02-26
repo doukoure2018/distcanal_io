@@ -83,7 +83,9 @@ class _ProfilViewState extends State<ProfilView> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
+            // ignore: deprecated_member_use
             kAccentColor.withOpacity(0.2),
+            // ignore: deprecated_member_use
             kAccentColor.withOpacity(0.1),
           ],
           begin: Alignment.topLeft,
@@ -92,6 +94,7 @@ class _ProfilViewState extends State<ProfilView> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
@@ -107,6 +110,7 @@ class _ProfilViewState extends State<ProfilView> {
           fontStyle: FontStyle.italic,
           shadows: [
             Shadow(
+              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.5),
               blurRadius: 5,
               offset: const Offset(2, 2),
@@ -156,6 +160,7 @@ class _ProfilViewState extends State<ProfilView> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
+          // ignore: deprecated_member_use
           colors: [kPrimaryColor, kAccentColor.withOpacity(0.2)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -198,6 +203,7 @@ class _ProfilViewState extends State<ProfilView> {
   Widget _buildDrawerItem(IconData icon, String title) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      // ignore: deprecated_member_use
       color: Colors.white.withOpacity(0.1),
       child: ListTile(
         leading: Icon(icon, color: kAccentColor),
@@ -215,6 +221,7 @@ class _ProfilViewState extends State<ProfilView> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
+          // ignore: deprecated_member_use
           colors: [kPrimaryColor, kAccentColor.withOpacity(0.2)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -222,6 +229,7 @@ class _ProfilViewState extends State<ProfilView> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
@@ -265,11 +273,14 @@ class _ProfilViewState extends State<ProfilView> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
+        // ignore: deprecated_member_use
         color: kPrimaryColor.withOpacity(0.5),
         borderRadius: BorderRadius.circular(20),
+        // ignore: deprecated_member_use
         border: Border.all(color: kAccentColor.withOpacity(0.3)),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.2),
             blurRadius: 5,
             offset: const Offset(0, 3),
@@ -306,6 +317,7 @@ class _ProfilViewState extends State<ProfilView> {
   Widget _buildInfoCard(String title, String value, String percentage) {
     return Expanded(
       child: Card(
+        // ignore: deprecated_member_use
         color: Colors.white.withOpacity(0.1),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -337,6 +349,7 @@ class _ProfilViewState extends State<ProfilView> {
 
   Widget _buildStockCard() {
     return Card(
+      // ignore: deprecated_member_use
       color: Colors.white.withOpacity(0.1),
       child: const Padding(
         padding: EdgeInsets.all(16),
@@ -373,6 +386,7 @@ class _ProfilViewState extends State<ProfilView> {
   Widget _buildStatCard(String title, String value) {
     return Expanded(
       child: Card(
+        // ignore: deprecated_member_use
         color: Colors.white.withOpacity(0.1),
         child: Padding(
           padding: const EdgeInsets.all(12),

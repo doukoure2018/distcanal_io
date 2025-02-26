@@ -8,8 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthProvider with ChangeNotifier {
-  final String hostName =
-      'http://distcanal-api-env.eba-msskhy3h.af-south-1.elasticbeanstalk.com';
+  final String hostName = '79.137.36.125:8089';
   // Use the environment configuration
   bool isLoading = false;
 

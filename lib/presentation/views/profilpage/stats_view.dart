@@ -66,6 +66,7 @@ class StatsView extends StatelessWidget {
   Widget _buildStatCard(String title, String value, IconData icon) {
     return Expanded(
       child: Card(
+        // ignore: deprecated_member_use
         color: Colors.white.withOpacity(0.1),
         elevation: 5, // Ombre plus prononcée
         shape: RoundedRectangleBorder(
@@ -103,6 +104,7 @@ class StatsView extends StatelessWidget {
   // Section des graphiques
   Widget _buildGraphSection() {
     return Card(
+      // ignore: deprecated_member_use
       color: Colors.white.withOpacity(0.1),
       elevation: 5, // Ombre plus prononcée
       shape: RoundedRectangleBorder(
@@ -125,6 +127,7 @@ class StatsView extends StatelessWidget {
             Container(
               height: 200,
               decoration: BoxDecoration(
+                // ignore: deprecated_member_use
                 color: Colors.white.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -147,6 +150,7 @@ class StatsView extends StatelessWidget {
   // Section des statistiques par article
   Widget _buildStatisticsByArticle() {
     return Card(
+      // ignore: deprecated_member_use
       color: Colors.white.withOpacity(0.1),
       elevation: 5, // Ombre plus prononcée
       shape: RoundedRectangleBorder(

@@ -1,5 +1,10 @@
-import 'package:distcanal_io/presentation/views/profilpage/profil_view.dart';
+import 'package:distcanal_io/models/signin_model.dart';
+import 'package:distcanal_io/models/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Importez Provider
+import 'package:distcanal_io/providers/auth_provider.dart'; // Importez AuthProvider
+import 'package:distcanal_io/providers/user_provider.dart'; // Importez UserProvider
+import 'package:distcanal_io/presentation/views/profilpage/profil_view.dart'; // Importez ProfilView
 
 class SigninView extends StatefulWidget {
   static const String routeName = '/signin';
@@ -29,22 +34,46 @@ class _SigninViewState extends State<SigninView> {
     });
 
     if (_formKey.currentState!.validate()) {
-      // Simuler une validation des identifiants (sans délai artificiel)
-      if (_emailController.text.trim() == 'moumine.ingenieur@gmail.com' &&
-          _passwordController.text.trim() == 'Moumine80') {
-        // Identifiants valides : rediriger vers ProfilView
-        Navigator.pushNamed(context, ProfilView.routeName);
-      } else {
-        // Identifiants invalides : afficher un message d'erreur
+      try {
+        // Récupérer AuthProvider et UserProvider
+        final authProvider = context.read<AuthProvider>();
+        final userProvider = context.read<UserProvider>();
+
+        // Appeler la méthode signin de AuthProvider
+        final response = await authProvider.signin(
+          SigninForm(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          ),
+        );
+
+        if (response is User) {
+          // Connexion réussie : récupérer les informations de l'utilisateur
+          await userProvider.fetchCurrentUser();
+
+          // Rediriger vers ProfilView
+          if (mounted) {
+            Navigator.pushNamed(context, ProfilView.routeName);
+          }
+        } else {
+          // Connexion échouée : afficher un message d'erreur
+          setState(() {
+            _errorMessage = "Email ou mot de passe incorrect.";
+          });
+        }
+      } catch (e) {
+        // Gérer les erreurs
         setState(() {
-          _errorMessage = "Identifiants incorrects.";
+          _errorMessage = "Une erreur s'est produite. Veuillez réessayer.";
         });
       }
     }
 
-    setState(() {
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -67,7 +96,7 @@ class _SigninViewState extends State<SigninView> {
                 height: 792,
                 padding: const EdgeInsets.only(top: 29, bottom: 56),
                 child: Form(
-                  key: _formKey, // Ajoutez le Form ici
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -142,7 +171,7 @@ class _SigninViewState extends State<SigninView> {
                                     hintStyle: TextStyle(color: Colors.white70),
                                     border: InputBorder.none,
                                     prefixIcon: Icon(
-                                      Icons.email, // Icône pour l'email
+                                      Icons.email,
                                       color: kAccentColor,
                                     ),
                                     focusedBorder: OutlineInputBorder(
@@ -178,7 +207,7 @@ class _SigninViewState extends State<SigninView> {
                                         const TextStyle(color: Colors.white70),
                                     border: InputBorder.none,
                                     prefixIcon: const Icon(
-                                      Icons.lock, // Icône pour le mot de passe
+                                      Icons.lock,
                                       color: kAccentColor,
                                     ),
                                     suffixIcon: IconButton(

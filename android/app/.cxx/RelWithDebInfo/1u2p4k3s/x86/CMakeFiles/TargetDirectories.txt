@@ -1,0 +1,2 @@
+D:/Developpements/distcanal_io/android/app/.cxx/RelWithDebInfo/1u2p4k3s/x86/CMakeFiles/edit_cache.dir
+D:/Developpements/distcanal_io/android/app/.cxx/RelWithDebInfo/1u2p4k3s/x86/CMakeFiles/rebuild_cache.dir
